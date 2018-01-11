@@ -11,6 +11,10 @@ Do you like LaserGRBL? Support development with your donation!
 
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=mlpita%40bergamo3%2eit&lc=US&item_name=LaserGRBL&item_number=Support%20development&currency_code=EUR)
 
+### Fork-Specific Changes
+
+- Marlin-compatible gcode
+
 ### Existing Features
 
 - GCode file loading with engraving/cutting job preview (with alpha blending for grayscale engraving)
