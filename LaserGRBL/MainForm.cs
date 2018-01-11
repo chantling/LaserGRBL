@@ -15,7 +15,8 @@ namespace LaserGRBL
 
 			MMn.Renderer = new MMnRenderer();
 
-			splitContainer1.FixedPanel = FixedPanel.Panel1;
+            Settings.SetObject("File currently open", false);
+            splitContainer1.FixedPanel = FixedPanel.Panel1;
 			splitContainer1.SplitterDistance = (int)Settings.GetObject("MainForm Splitter Position", 260);
 			autoUpdateToolStripMenuItem.Checked = (bool)Settings.GetObject("Auto Update", true);
 
@@ -312,7 +313,12 @@ namespace LaserGRBL
 			Core.SaveProgram();
 		}
 
-		private void MNEnglish_Click(object sender, EventArgs e)
+        void MnGCodeOptionClick(object sender, EventArgs e)
+        {
+            Core.ShowGCodeOption();
+        }
+
+        private void MNEnglish_Click(object sender, EventArgs e)
 		{
 			SetLanguage(new System.Globalization.CultureInfo("en"));
 		}

@@ -101,6 +101,12 @@
   <ItemGroup>
     <Compile Include="ColorScheme.cs" />
     <Compile Include="ComWrapper\Emulator.cs" />
+    <Compile Include="GCodeOptionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GCodeOptionForm.Designer.cs">
+      <DependentUpon>GCodeOptionForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="RunFromPositionForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -444,6 +450,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ConnectLogForm.zh-CN.resx">
       <DependentUpon>ConnectLogForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCodeOptionForm.resx">
+      <DependentUpon>GCodeOptionForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="RunFromPositionForm.resx">
       <DependentUpon>RunFromPositionForm.cs</DependentUpon>

@@ -172,6 +172,9 @@ namespace LaserGRBL
 			list.Clear();
 			mRange.ResetRange();
 
+            bool autoHome = autoHomeEnabled();
+            double zOffset = getZOffset();
+
 			Potrace.turdsize = (int)(UseSpotRemoval ? SpotRemoval : 2);
 			Potrace.alphamax = UseSmoothing ? (double)Smoothing : 0.0;
 			Potrace.opttolerance = UseOptimize ? (double)Optimize : 0.2;
@@ -189,12 +192,18 @@ namespace LaserGRBL
 						Potrace.Export2GDIPlus(plist, g, Brushes.Black, null, Math.Max(1, c.res / c.fres));
 						using (Bitmap resampled = RasterConverter.ImageTransform.ResizeImage(ptb, new Size((int)(bmp.Width * c.fres / c.res), (int)(bmp.Height * c.fres / c.res)), true, InterpolationMode.HighQualityBicubic))
 						{
+                            if (autoHome)
+                                list.Add(new GrblCommand("G28"));
+
 							//absolute
 							list.Add(new GrblCommand("G90"));
 
 							//move fast to offset
-							list.Add(new GrblCommand(String.Format("G0 X{0} Y{1}", formatnumber(c.oX), formatnumber(c.oY))));
-							if (c.pwm)
+                            if (autoHome)
+							    list.Add(new GrblCommand(String.Format("G0 X{0} Y{1} Z{2}", formatnumber(c.oX), formatnumber(c.oY), formatnumber(zOffset))));
+                            else
+                                list.Add(new GrblCommand(String.Format("G0 X{0} Y{1}", formatnumber(c.oX), formatnumber(c.oY))));
+                            if (c.pwm)
 								list.Add(new GrblCommand(String.Format("{0} S0", c.lOn))); //laser on and power to zero
 							else
 								list.Add(new GrblCommand(String.Format("{0} S255", c.lOff))); //laser off and power to max power
@@ -203,7 +212,7 @@ namespace LaserGRBL
 							list.Add(new GrblCommand("G91"));
 
 							//set speed to markspeed
-							list.Add(new GrblCommand(String.Format("F{0}", c.markSpeed)));
+							list.Add(new GrblCommand(String.Format("G1 F{0}", c.markSpeed)));
 
 							c.vectorfilling = true;
 							ImageLine2Line(resampled, c);
@@ -215,14 +224,20 @@ namespace LaserGRBL
 				}
 			}
 
-			//absolute
-			list.Add(new GrblCommand("G90"));
-			//move fast to offset
-			list.Add(new GrblCommand(String.Format("G0 X{0} Y{1}", formatnumber(c.oX), formatnumber(c.oY))));
-			//laser off and power to maxPower
-			list.Add(new GrblCommand(String.Format("{0} S{1}", c.lOff, c.maxPower)));
+            if (autoHome)
+                list.Add(new GrblCommand("G28"));
+
+            //absolute
+            list.Add(new GrblCommand("G90"));
+            //move fast to offset
+            if (autoHome)
+                list.Add(new GrblCommand(String.Format("G0 X{0} Y{1} Z{2}", formatnumber(c.oX), formatnumber(c.oY), formatnumber(zOffset))));
+            else
+                list.Add(new GrblCommand(String.Format("G0 X{0} Y{1}", formatnumber(c.oX), formatnumber(c.oY))));
+            //laser off and power to maxPower
+            list.Add(new GrblCommand(String.Format("{0} S{1}", c.lOff, c.maxPower)));
 			//set speed to borderspeed
-			list.Add(new GrblCommand(String.Format("F{0}", c.borderSpeed)));
+			list.Add(new GrblCommand(String.Format("G1 F{0}", c.borderSpeed)));
 
 			//trace borders
 			List<string> gc = Potrace.Export2GCode(plist, c.oX, c.oY, c.res, c.lOn, c.lOff, bmp.Size);
@@ -270,11 +285,20 @@ namespace LaserGRBL
 			list.Clear();
 			mRange.ResetRange();
 
-			//absolute
-			list.Add(new GrblCommand("G90"));
-			//move fast to offset
-			list.Add(new GrblCommand(String.Format("G0 X{0} Y{1}", formatnumber(c.oX), formatnumber(c.oY))));
-			if (c.pwm)
+            bool autoHome = autoHomeEnabled();
+            double zOffset = getZOffset();
+
+            if (autoHome)
+                list.Add(new GrblCommand("G28"));
+            //absolute
+            list.Add(new GrblCommand("G90"));
+            //move fast to offset
+            if (autoHome)
+                list.Add(new GrblCommand(String.Format("G0 X{0} Y{1} Z{2}", formatnumber(c.oX), formatnumber(c.oY), formatnumber(zOffset))));
+            else
+                list.Add(new GrblCommand(String.Format("G0 X{0} Y{1}", formatnumber(c.oX), formatnumber(c.oY))));
+
+            if (c.pwm)
 				list.Add(new GrblCommand(String.Format("{0} S0", c.lOn))); //laser on and power to zero
 			else
 				list.Add(new GrblCommand(String.Format("{0} S255", c.lOff))); //laser off and power to maxpower
@@ -841,7 +865,17 @@ namespace LaserGRBL
 		public GrblCommand this[int index]
 		{ get { return list[index]; } }
 
-	}
+        public bool autoHomeEnabled()
+        {
+            return (bool)Settings.GetObject("AutoHome", false);
+        }
+
+        public double getZOffset()
+        {
+            return (double)Settings.GetObject("Z Offset", 0.0);
+        }
+
+    }
 
 
 

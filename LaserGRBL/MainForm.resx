@@ -708,6 +708,12 @@
   <data name="MnSaveProgram.Text" xml:space="preserve">
     <value>&amp;Save Program</value>
   </data>
+  <data name="MnGCodeOption.Size" type="System.Drawing.Size, System.Drawing">
+    <value>187, 22</value>
+  </data>
+  <data name="MnGCodeOption.Text" xml:space="preserve">
+    <value>Show GCode Options</value>
+  </data>
   <data name="toolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
     <value>174, 6</value>
   </data>
@@ -1117,6 +1123,9 @@
   <data name="&gt;&gt;MMn.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
+  <data name="MnGCodeOptions.Size" type="System.Drawing.Size, System.Drawing">
+    <value>32, 19</value>
+  </data>
   <metadata name="AwakeTimer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>415, 18</value>
   </metadata>
@@ -1207,6 +1216,9 @@
         AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHgAAAD4AAAA/AAAAPwAAAD/AAAA//wAAP/+AAH//g
         AD//4AD//+AB///gAf//4AH///AD///wA/8=
 </value>
+  </data>
+  <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="$this.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>4, 4, 4, 4</value>
@@ -1574,11 +1586,23 @@
   <data name="&gt;&gt;aboutToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="&gt;&gt;MnGCodeOptions.Name" xml:space="preserve">
+    <value>MnGCodeOptions</value>
+  </data>
+  <data name="&gt;&gt;MnGCodeOptions.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;AwakeTimer.Name" xml:space="preserve">
     <value>AwakeTimer</value>
   </data>
   <data name="&gt;&gt;AwakeTimer.Type" xml:space="preserve">
     <value>System.Windows.Forms.Timer, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;MnGCodeOption.Name" xml:space="preserve">
+    <value>MnGCodeOption</value>
+  </data>
+  <data name="&gt;&gt;MnGCodeOption.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>MainForm</value>

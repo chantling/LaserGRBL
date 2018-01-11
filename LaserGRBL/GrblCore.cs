@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Windows.Forms;
 
 namespace LaserGRBL
 {
@@ -228,6 +229,8 @@ namespace LaserGRBL
 
 		public UsageStats.UsageCounters UsageCounters;
 
+        public bool bFileIsOpen = false;
+
 		public GrblCore(System.Windows.Forms.Control syncroObject)
 		{
 			SetStatus(MacStatus.Disconnected);
@@ -427,6 +430,7 @@ namespace LaserGRBL
 						System.Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.Default;
 					}
 				}
+                Settings.SetObject("File currently open", true);
 			}
 			catch (Exception ex)
 			{
@@ -453,7 +457,12 @@ namespace LaserGRBL
 			}
 		}
 
-		public void RefreshConfig()
+        public void ShowGCodeOption()
+        {
+            GCodeOptionForm.CreateAndShowDialog();
+        }
+
+        public void RefreshConfig()
 		{
 			if (mMachineStatus == MacStatus.Idle)
 			{
