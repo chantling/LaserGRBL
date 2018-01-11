@@ -445,7 +445,7 @@ namespace LaserGRBL
 				string filename = null;
 				using (System.Windows.Forms.SaveFileDialog ofd = new System.Windows.Forms.SaveFileDialog())
 				{
-					ofd.Filter = "GCODE Files|*.nc";
+					ofd.Filter = "GCODE files (*.gcode)|*.gcode|GCODE Files|*.nc|All files (*.*)|*.*";
 					ofd.AddExtension = true;
 					ofd.RestoreDirectory = true;
 					if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
