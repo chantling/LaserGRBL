@@ -32,9 +32,11 @@ namespace LaserGRBL.RasterConverter
 			LblSmin.Visible = LblSmax.Visible = IIMaxPower.Visible = IIMinPower.Visible = BtnModulationInfo.Visible = supportPWM;
 			AssignMinMaxLimit();
 
-			CBLaserON.Items.Add("M3");
+            CBLaserON.Items.Add("M106");
+            CBLaserON.Items.Add("M3");
 			if (core.Configuration.LaserMode)
 				CBLaserON.Items.Add("M4");
+            CBLaserOFF.Items.Add("M107");
 		}
 
 		private void AssignMinMaxLimit()
@@ -73,14 +75,14 @@ namespace LaserGRBL.RasterConverter
 			IIBorderTracing.CurrentValue = IP.BorderSpeed = (int)Settings.GetObject("GrayScaleConversion.VectorizeOptions.BorderSpeed", 1000);
 			IILinearFilling.CurrentValue = IP.MarkSpeed = (int)Settings.GetObject("GrayScaleConversion.Gcode.Speed.Mark", 1000);
 
-			IP.LaserOn = (string)Settings.GetObject("GrayScaleConversion.Gcode.LaserOptions.LaserOn", "M3");
+			IP.LaserOn = (string)Settings.GetObject("GrayScaleConversion.Gcode.LaserOptions.LaserOn", "M106");
 
 			if (CBLaserON.Items.Contains(IP.LaserOn))
 				CBLaserON.SelectedItem = IP.LaserOn;
 			else
 				CBLaserON.SelectedIndex = 0;
 
-			IP.LaserOff = (string)Settings.GetObject("GrayScaleConversion.Gcode.LaserOptions.LaserOff", "M5");
+			IP.LaserOff = (string)Settings.GetObject("GrayScaleConversion.Gcode.LaserOptions.LaserOff", "M107");
 
 			if (CBLaserOFF.Items.Contains(IP.LaserOff))
 				CBLaserOFF.SelectedItem = IP.LaserOff;
