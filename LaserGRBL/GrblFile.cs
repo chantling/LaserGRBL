@@ -103,10 +103,12 @@ namespace LaserGRBL
 			public override string ToString()
 			{
 				if (mConf.pwm)
-					return string.Format("X{0} S{1}", formatnumber(mReverse ? -mLen : mLen), mColor);
+					return string.Format("{0} S{1}" + System.Environment.NewLine + "X{2}", Fast ? mConf.lOff : mConf.lOn, mColor, formatnumber(mReverse ? -mLen : mLen));
+                    //return string.Format("X{0} S{1}", formatnumber(mReverse ? -mLen : mLen), mColor);
 				else
-					return string.Format("X{0} {1}", formatnumber(mReverse ? -mLen : mLen), Fast ? mConf.lOff : mConf.lOn);
-			}
+                    return string.Format("{0}" + System.Environment.NewLine + "X{1}", Fast ? mConf.lOff : mConf.lOn,formatnumber(mReverse ? -mLen : mLen));
+                //return string.Format("X{0} {1}", formatnumber(mReverse ? -mLen : mLen), Fast ? mConf.lOff : mConf.lOn);
+            }
 		}
 
 		private class YSegment : ColorSegment
@@ -115,12 +117,14 @@ namespace LaserGRBL
 
 			public override string ToString()
 			{
-				if (mConf.pwm)
-					return string.Format("Y{0} S{1}", formatnumber(mReverse ? -mLen : mLen), mColor);
-				else
-					return string.Format("Y{0} {1}", formatnumber(mReverse ? -mLen : mLen), Fast ? mConf.lOff : mConf.lOn);
-			}
-		}
+                if (mConf.pwm)
+                    return string.Format("{0} S{1}" + System.Environment.NewLine + "Y{2}", Fast ? mConf.lOff : mConf.lOn, mColor, formatnumber(mReverse ? -mLen : mLen));
+                //return string.Format("X{0} S{1}", formatnumber(mReverse ? -mLen : mLen), mColor);
+                else
+                    return string.Format("{0}" + System.Environment.NewLine + "Y{1}", Fast ? mConf.lOff : mConf.lOn, formatnumber(mReverse ? -mLen : mLen));
+                //return string.Format("X{0} {1}", formatnumber(mReverse ? -mLen : mLen), Fast ? mConf.lOff : mConf.lOn);
+            }
+        }
 
 		private class DSegment : ColorSegment
 		{
@@ -129,10 +133,12 @@ namespace LaserGRBL
 			public override string ToString()
 			{
 				if (mConf.pwm)
-					return string.Format("X{0} Y{1} S{2}", formatnumber(mReverse ? -mLen : mLen), formatnumber(mReverse ? mLen : -mLen), mColor);
+                    return string.Format("{0} S{1}" + System.Environment.NewLine + "X{2} Y{3}", Fast ? mConf.lOff : mConf.lOn, mColor, formatnumber(mReverse ? -mLen : mLen), formatnumber(mReverse ? mLen : -mLen));
+                    //return string.Format("X{0} Y{1} S{2}", formatnumber(mReverse ? -mLen : mLen), formatnumber(mReverse ? mLen : -mLen), mColor);
 				else
-					return string.Format("X{0} Y{1} {2}", formatnumber(mReverse ? -mLen : mLen), formatnumber(mReverse ? mLen : -mLen), Fast ? mConf.lOff : mConf.lOn);
-			}
+                    return string.Format("{0}" + System.Environment.NewLine + "X{2} Y{3}", Fast ? mConf.lOff : mConf.lOn, formatnumber(mReverse ? -mLen : mLen), formatnumber(mReverse ? mLen : -mLen));
+                //return string.Format("X{0} Y{1} {2}", formatnumber(mReverse ? -mLen : mLen), formatnumber(mReverse ? mLen : -mLen), Fast ? mConf.lOff : mConf.lOn);
+            }
 		}
 
 		private class VSeparator : ColorSegment
@@ -273,10 +279,11 @@ namespace LaserGRBL
 			else
 				list.Add(new GrblCommand(String.Format("{0} S255", c.lOff))); //laser off and power to maxpower
 
-			//set speed to markspeed						
-			list.Add(new GrblCommand(String.Format("F{0}", c.markSpeed)));
-			//relative
-			list.Add(new GrblCommand("G91"));
+            //relative
+            list.Add(new GrblCommand("G91"));
+
+            //set speed to markspeed						
+            list.Add(new GrblCommand(String.Format("G1 F{0}", c.markSpeed)));
 
 			ImageLine2Line(bmp, c);
 
@@ -301,26 +308,33 @@ namespace LaserGRBL
 			List<GrblCommand> temp = new List<GrblCommand>();
 			foreach (ColorSegment seg in segments)
 			{
-				bool changeGMode = (fast != seg.Fast); //se veloce != dafareveloce
+                //bool changeGMode = true; //(fast != seg.Fast); //se veloce != dafareveloce
 
 				if (seg.IsSeparator && !fast) //fast = previous segment contains S0 color
 				{
-					if (c.pwm)
-						temp.Add(new GrblCommand("S0"));
-					else
+					//if (c.pwm)
+					//	temp.Add(new GrblCommand("S0"));
+					//else
 						temp.Add(new GrblCommand(c.lOff)); //laser off
 				}
 
 				fast = seg.Fast;
 
-				if (changeGMode)
-					temp.Add(new GrblCommand(String.Format("{0} {1}", fast ? "G0" : "G1", seg.ToString())));
-				else
-					temp.Add(new GrblCommand(seg.ToString()));
+                string[] lines = seg.ToString().Split(new[] { System.Environment.NewLine }, StringSplitOptions.None);
 
-				//if (seg.IsSeparator)
-				//	list.Add(new GrblCommand(lOn));
-			}
+                if (lines.Length > 1)
+                    temp.Add(new GrblCommand(String.Format("{0}" + System.Environment.NewLine + "{1} {2}", lines[0], fast ? "G0" : "G1", lines[1])));
+                else
+                    temp.Add(new GrblCommand(String.Format("{0} {1}", fast ? "G0" : "G1", lines[0])));
+
+                /*if (changeGMode)
+					temp.Add(new GrblCommand(String.Format("{0} {1} {2}", lines[0], fast ? "G0" : "G1", lines[1])));
+				else
+					temp.Add(new GrblCommand(seg.ToString()));*/
+
+                //if (seg.IsSeparator)
+                //	list.Add(new GrblCommand(lOn));
+            }
 
 			temp = OptimizeLine2Line(temp, c);
 			list.AddRange(temp);
@@ -340,8 +354,10 @@ namespace LaserGRBL
 				try
 				{
 					cmd.BuildHelper();
+                    rv.Add(cmd);
 
-					bool oldcumulate = cumulate;
+                    /*
+                    bool oldcumulate = cumulate;
 
 					if (c.pwm)
 					{
@@ -361,7 +377,7 @@ namespace LaserGRBL
 							cumulate = false;  //end cumulate
 					}
 
-
+                    
 					if (oldcumulate && !cumulate) //cumulate down front -> flush
 					{
 						if (c.pwm)
@@ -389,8 +405,8 @@ namespace LaserGRBL
 					else //emit line normally
 					{
 						rv.Add(cmd);
-					}
-				}
+					}*/
+                }
 				catch (Exception ex) { throw ex; }
 				finally { cmd.DeleteHelper(); }
 			}
